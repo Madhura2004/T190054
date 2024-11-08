@@ -1,0 +1,62 @@
+from tkinter import *
+from tkinter import messagebox
+
+class BillManagement:
+    def __init__(self, root):
+        self.root = root
+        self.root.geometry("500x500")
+        self.root.title("Bill Management")
+        self.root.config(bg="lightblue")
+
+        self.items = {
+            "Dosa": 60,
+            "Cookies": 30,
+            "Tea": 10,
+            "Coffee": 100,
+            "Juice": 20
+        }
+
+        # Store quantities and total bill
+        self.quantities = {item: IntVar(value=0) for item in self.items}
+        self.total_bill = StringVar(value="Total: Rs. 0")
+
+        # Title Label
+        Label(root, text="Bill Management", font=("Arial", 24), bg="#f0f8ff").pack(pady=10)
+
+        # Input fields for items
+        for item, price in self.items.items():
+            frame = Frame(root, bg="#f0f8ff")
+            frame.pack(pady=5)
+            Label(frame, text=f"{item} (Rs.{price})", bg="#f0f8ff", font=("Arial", 14)).pack(side=LEFT)
+            Entry(frame, textvariable=self.quantities[item], width=5, bg="#e6f7ff").pack(side=RIGHT)
+
+        # Buttons for calculations and reset
+        Button(root, text="Calculate Total", command=self.calculate_total, bg="#b3e0ff", font=("Arial", 14)).pack(pady=10)
+        Button(root, text="Reset", command=self.reset, bg="#ffb3b3", font=("Arial", 14)).pack(pady=5)
+
+        # Frame for total display
+        total_frame = Frame(root, bg="#f0f8ff")
+        total_frame.pack(pady=10)
+        Label(total_frame, text="Total:", font=("Arial", 16), bg="#f0f8ff").pack(side=LEFT)
+        Label(total_frame, textvariable=self.total_bill, font=("Arial", 16), bg="#f0f8ff").pack(side=LEFT)
+
+    def calculate_total(self):
+        # Calculate the total bill
+        total = 0
+        for item, price in self.items.items():
+            quantity = self.quantities[item].get()
+            total += quantity * price
+
+        self.total_bill.set(f"Rs. {total}")
+        messagebox.showinfo("Total Bill", f"The total bill is: Rs. {total}")
+
+    def reset(self):
+        # Reset all quantities and total bill
+        for item in self.quantities:
+            self.quantities[item].set(0)
+        self.total_bill.set("Total: Rs. 0")
+
+if __name__ == "__main__":
+    root = Tk()
+    app = BillManagement(root)
+    root.mainloop()
